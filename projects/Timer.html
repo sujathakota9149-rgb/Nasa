@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color:aliceblue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    h1 {
+      color:black;
+      margin-bottom: 20px;
+    }
+
+    .input-container {
+      margin-bottom: 20px;
+    }
+
+    input{
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    #startBtn{
+      padding: 8px 15px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      background-color: #00ff5994;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    #resetBtn{
+      padding: 8px 15px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      background-color:rgba(255, 0, 0, 0.503);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .countdown {
+      font-size: 2rem;
+      font-weight: bold;
+      color:rgb(250, 6, 210);
+      margin-top: 20px;
+    }
+
+    .message {
+      font-size:40px;
+      color: red;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Countdown Timer</h1>
+
+  <div class="container">
+    <label for="targetTime">Select Target Date & Time: </label>
+    <input type="datetime-local" id="targetTime">
+  </div>
+
+  <div>
+    <button id="startBtn">Start</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <div class="countdown" id="countdownDisplay">00D : 00H : 00M : 00S</div>
+  <div class="message" id="message"></div>
+
+  <script>
+    let timer;
+    const countdownDisplay = document.getElementById("countdownDisplay");
+    const message = document.getElementById("message");
+    const targetInput = document.getElementById("targetTime");
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      const targetTime = new Date(targetInput.value).getTime();
+
+      if (targetInput.value) {
+        alert("Please select a date and time");
+        return;
+      }
+
+      clearInterval(timer); 
+
+      timer = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetTime - now;
+
+        if (distance <= 0) {
+          clearInterval(timer);
+          countdownDisplay.textContent = "00D : 00H : 00M : 00S";
+          message.textContent = " Time's up";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownDisplay.textContent = `${days}Day's : ${hours}H : ${minutes}M : ${seconds}S`;
+        message.textContent = "";
+      }, 1000);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      clearInterval(timer);
+      targetInput.value = "";
+      countdownDisplay.textContent = "00D : 00H : 00M : 00S";
+      message.textContent = "";
+    });
+  </script>
+</body>
+</html>
